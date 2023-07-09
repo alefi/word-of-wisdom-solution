@@ -1,11 +1,15 @@
 use lib::{compute_challenge, disconnect};
 use std::io::Read;
-use std::net::{Shutdown, SocketAddr, TcpStream};
+use std::net::{Shutdown, SocketAddr, TcpStream, ToSocketAddrs};
 use word_of_wisdom_shared::{config::Config, parse_reply, send_message};
 
 fn main() {
     let config = Config::parse().unwrap();
-    let addr: SocketAddr = SocketAddr::from(([127, 0, 0, 1], config.port));
+    let mut addr = format!("{}:{}", config.server_host, config.port)
+        .to_socket_addrs()
+        .unwrap();
+    let addr: SocketAddr = addr.next().unwrap();
+
     let mut stream: TcpStream = TcpStream::connect(addr).unwrap();
     let mut buf: [u8; 256] = [0; 256];
 

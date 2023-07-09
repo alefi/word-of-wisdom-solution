@@ -1,9 +1,11 @@
 use std::env;
 
 const DEFAULT_PORT: u16 = 4000;
+const DEFAULT_SERVER_HOST: &str = "127.0.0.1";
 
 pub struct Config {
     pub port: u16,
+    pub server_host: String,
 }
 
 impl Config {
@@ -13,6 +15,11 @@ impl Config {
             _ => DEFAULT_PORT,
         };
 
-        Ok(Config { port })
+        let server_host: String = match env::var("SERVER_HOST") {
+            Ok(host) => host,
+            _ => DEFAULT_SERVER_HOST.to_string(),
+        };
+
+        Ok(Config { port, server_host })
     }
 }
