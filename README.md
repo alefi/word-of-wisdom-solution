@@ -68,8 +68,7 @@ The [hashcash](http://www.hashcash.org/) algorithm has been selected because of 
 This code is provided as a PoC and it could be improved. For instance:
 
 - use the same code style because of currently, a slighlty different ones are used by design.
-- add routing to the client.
-- store PoW tokens cache is Redis or another persistent storage with auto remove according TTL feature turned on.
+- store PoW tokens cache in Redis or another persistent storage with auto remove according TTL feature turned on.
 - handle errors better (consider transfer some details to a client)
 - additinal tests.
 
