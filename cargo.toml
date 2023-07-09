@@ -1,0 +1,5 @@
+[workspace]
+members = ["client", "server", "shared"]
+# Only check / build main crates by default (check all with `--workspace`)
+default-members = ["client", "server"]
+resolver = "2"

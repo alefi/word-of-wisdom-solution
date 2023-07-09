@@ -1,0 +1,12 @@
+[package]
+name = "word-of-wisdom-client"
+version = "0.0.1"
+edition = "2021"
+
+[dependencies]
+rust-hashcash = "0.3.3"
+word-of-wisdom-shared = { path = "../shared" }
+
+[lib]
+name = "lib"
+path = "src/lib.rs"
