@@ -97,4 +97,15 @@ cargo run -p word-of-wisdom-client
 
 ### Deploy
 
-TODO finish dockerization
+> 📝 _To detach out of a container push ^P^Q key sequence._
+
+For running inside docker containers, type:
+
+```console
+docker network create word-of-wisdom-network
+docker build -t word-of-wisdom .
+
+docker run --network word-of-wisdom-network --name word-of-wisdom-server -it -p 44000:44000 -e SERVICE=server word-of-wisdom
+
+docker run --network word-of-wisdom-network -e SERVICE=client -e SERVER_HOST=word-of-wisdom-server word-of-wisdom
+```
