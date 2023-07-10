@@ -78,6 +78,7 @@ This code is provided as a PoC and it could be improved. For instance:
 ### Environment variables
 
 - `PORT`: used both by client and server
+- `SERVER_HOST`: used by client for connecting to the server
 
 ### Run locally
 
