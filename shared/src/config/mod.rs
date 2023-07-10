@@ -15,10 +15,8 @@ impl Config {
             _ => DEFAULT_PORT,
         };
 
-        let server_host: String = match env::var("SERVER_HOST") {
-            Ok(host) => host,
-            _ => DEFAULT_SERVER_HOST.to_string(),
-        };
+        let server_host: String =
+            env::var("SERVER_HOST").unwrap_or(DEFAULT_SERVER_HOST.to_string());
 
         Ok(Config { port, server_host })
     }
