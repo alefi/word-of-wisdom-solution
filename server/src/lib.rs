@@ -1,7 +1,9 @@
 use crate::pow::Pow;
 use crate::quotes::get_random_quote;
 use std::io::Read;
+use std::net::TcpListener;
 use std::net::{IpAddr, TcpStream};
+use std::thread;
 use word_of_wisdom_shared::{parse_reply, send_message};
 
 mod pow;
@@ -14,7 +16,20 @@ pub fn extract_client_ip(stream: &TcpStream) -> IpAddr {
     }
 }
 
-pub fn handle_client(mut stream: TcpStream) {
+pub fn handle_stream(listener: TcpListener) {
+    for tpc_stream in listener.incoming() {
+        match tpc_stream {
+            Ok(stream) => {
+                thread::spawn(move || handle_client(stream));
+            }
+            Err(e) => {
+                println!("Error:{}", e);
+            }
+        }
+    }
+}
+
+fn handle_client(mut stream: TcpStream) {
     let mut buf: [u8; 256] = [0; 256];
 
     // Using an IP address to distinct a client.
