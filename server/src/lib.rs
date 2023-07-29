@@ -1,6 +1,6 @@
 use crate::pow::Pow;
 use crate::quotes::get_random_quote;
-use std::io::Read;
+use std::io::{Read, Result};
 use std::net::TcpListener;
 use std::net::{IpAddr, TcpStream};
 use std::thread;
@@ -45,10 +45,11 @@ fn handle_client(mut stream: TcpStream) {
                 Ok(_) => {
                     let quote = get_random_quote();
                     let message = format!("quote:{}", quote);
-                    send_message(&mut stream, message);
+                    send_message(&mut stream, message).expect("Couldn't send a message")
                 }
-                Err(_) => send_challenge_required(&mut stream, &client_ip),
-            };
+                Err(_) => send_challenge_required(&mut stream, &client_ip)
+                    .expect("Couldn't send a challenge message"),
+            }
 
             true
         }
@@ -62,8 +63,8 @@ fn handle_client(mut stream: TcpStream) {
     } {}
 }
 
-fn send_challenge_required(stream: &mut TcpStream, client_ip: &IpAddr) {
+fn send_challenge_required(stream: &mut TcpStream, client_ip: &IpAddr) -> Result<()> {
     let pow_object: Pow = Pow::new(client_ip, None);
     let resource_hash = pow_object.resource.get_hash();
-    send_message(stream, resource_hash.to_string());
+    send_message(stream, resource_hash.to_string())
 }

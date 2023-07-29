@@ -1,5 +1,5 @@
 use lib::{compute_challenge, disconnect};
-use std::io::Read;
+use std::io::{Read, Result};
 use std::net::{Shutdown, SocketAddr, TcpStream, ToSocketAddrs};
 use word_of_wisdom_shared::{config::Config, parse_reply, send_message};
 
@@ -14,7 +14,7 @@ fn main() {
     let mut buf: [u8; 256] = [0; 256];
 
     // Since we know the server would ask for a challenge, we're going to ask for a resource.
-    send_message(&mut stream, String::from("preflight"));
+    send_message(&mut stream, String::from("preflight")).expect("Couldn't send preflight message");
 
     while match stream.read(&mut buf) {
         Ok(size) => {
@@ -25,7 +25,7 @@ fn main() {
                 // The receiver method has already printed the content out.
                 false
             } else {
-                send_challenge(&mut stream, message);
+                send_challenge(&mut stream, message).expect("Couldn't send message");
                 true
             }
         }
@@ -37,8 +37,8 @@ fn main() {
     } {}
 }
 
-fn send_challenge(stream: &mut TcpStream, resource: String) {
+fn send_challenge(stream: &mut TcpStream, resource: String) -> Result<()> {
     let challenge = compute_challenge(&resource);
     let message = format!("{}:{}", resource, challenge);
-    send_message(stream, message);
+    send_message(stream, message)
 }

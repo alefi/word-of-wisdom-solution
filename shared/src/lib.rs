@@ -1,4 +1,4 @@
-use std::io::Write;
+use std::io::{Result, Write};
 use std::net::TcpStream;
 
 pub mod config;
@@ -10,12 +10,10 @@ pub fn parse_reply(buf: &[u8], size: usize) -> String {
     message
 }
 
-pub fn send_message(stream: &mut TcpStream, message: String) {
-    match stream.write_all(message.as_bytes()) {
-        Ok(_) => {
-            stream.flush().unwrap();
-            println!(">> {}", message);
-        }
-        Err(e) => panic!("{:#?}", e),
-    }
+pub fn send_message(stream: &mut TcpStream, message: String) -> Result<()> {
+    stream.write_all(message.as_bytes()).and({
+        stream.flush().unwrap();
+        println!(">> {}", message);
+        Ok(())
+    })
 }
